@@ -23,7 +23,8 @@ Developer. All Rights Reserved.
 
 # Django settings for clusterify project.
 
-import os.path
+import os.path, sys
+
 
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -139,4 +140,8 @@ AUTH_PROFILE_MODULE = 'registration.Profile'
 
 # added for openid support
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend','registration.models.OpenIdBackend',)
+
+sys.path.insert(0, os.path.join(PROJECT_DIR, 'lib'))
+
+
 execfile(os.path.join(PROJECT_DIR, 'settings_local.py'))
