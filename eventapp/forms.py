@@ -23,55 +23,42 @@ Developer. All Rights Reserved.
 
 from django import forms
 from django.template import loader, Context
-from eventapp.models import Event
+from widgets import DateTimeWidget
 
-PROJECT_DESCRIPTION_TEMPLATE_FILE = 'projects/project_description_template.txt'
-ESTIMATE_CHOICES = (
-	('1', '1'),
-	('2', '2'),
-	('3', '3'),
-	('4', '4'),
-	('5', '5'),
-	('10', '10'),
-	('15', '15'),
-	('24', '24'),
-	('40', '40'),
-	('50', '50'),
-	('75', '75'),
-	('100', '100'),
-)
 
-def get_description_template():
-	return loader.get_template(PROJECT_DESCRIPTION_TEMPLATE_FILE).render(Context({}))
-
-class ProjectForm(forms.Form):
-	title = forms.CharField(
+class EventForm(forms.Form):
+	name = forms.CharField(
 				required=True, 
+				help_text='Max 200 characters',
 				max_length=200, 
 				widget=forms.widgets.TextInput(attrs={'style':'width: 95%;'}))
-	time_estimate = forms.IntegerField(
-				min_value=1,
+	image = forms.ImageField(label="Event image (width=110px)", widget=forms.FileInput, required=False)
+
+	start_date = forms.DateTimeField(widget = DateTimeWidget()) 
+	end_date = forms.DateTimeField(widget = DateTimeWidget()) 
+	description =forms.CharField(
 				required=False,
-				widget=forms.widgets.Select(choices=ESTIMATE_CHOICES))
-	event = forms.CharField(
-				required=False,
-				widget = forms.Select(choices=[('','')] +[(event.id, event.name[:50]) for event in Event.objects.all()]))
-	not_involved = forms.BooleanField(required=False)
-	description = forms.CharField(
-				initial=get_description_template, # idea taken at http://andrewwilkinson.wordpress.com/2009/01/28/dynamic-initial-values-in-django-forms/
-				required=False,
+				help_text='Max 5k characters. Use the Markdown syntax. Good summary <a href="http://crunchbang.org/wiki/formattingrules/" target="_new">here</a>.',
 				widget=forms.widgets.Textarea(
 					attrs={'class':'markdown_textarea','rows':'20'}),
 				max_length=5000)
-	showcase = forms.CharField(
-				required=False,
-				widget=forms.widgets.Textarea(
-					attrs={'class':'markdown_textarea','rows':'15'}),
-				max_length=5000)
 	tags = forms.RegexField(
 				required=False,
+				help_text='Alphanumeric, word junction by dash, separation by space',
 				regex=r'^[A-Za-z0-9\- ]+$',
 				widget=forms.widgets.TextInput(attrs={'style':'width: 95%;'}))
+	rsvp_link = forms.URLField(
+				label='RSVP / more info link', 
+				required=False,
+				widget=forms.widgets.TextInput(attrs={'style':'width: 95%;'}))
+	class Media:
+		css = {            
+			'all': ('/files/css/calendar/calendar-blue2.css', '/files/css/forms.css',)    
+		}
+		js = ('/files/js/calendar/calendar.js',
+			'/files/js/calendar/lang/calendar-en.js',
+			'/files/js/calendar/calendar-setup.js',
+			)
 
 class JoinForm(forms.Form):
 	role = forms.CharField(

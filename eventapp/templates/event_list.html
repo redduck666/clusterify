@@ -24,11 +24,12 @@ the code written by the Initial Developer are Copyright (c) the Initial
 Developer. All Rights Reserved.
 
 {% endcomment %}
-{% load projects_filters %}
-{% block title %}{{page_title }}{% endblock %}
+{% load calendar_tag %}
+{% block title %}{{ page_title }}{% endblock %}
 {% block titleInPage %}
-    <a class="highlight{% ifequal page_title "Completed projects" %}green{% endifequal %}" href="/projects/add/">Add a Project</a>
+    <a class="highlight" href="/events/add/">Add an Event</a>
 {% endblock %}
+
 
 {% block moreHead %}
 	{% if rss_url %}
@@ -40,28 +41,20 @@ Developer. All Rights Reserved.
 <div id="tabcontainer">
     <ul id="navigation">
         <li>
-            <a href="/projects/proposed/"
-               class='{% ifequal page_title "Proposed projects" %}active{% endifequal %}'>
-                <span>Proposed projects ({% proposed_project_count %})</span>
+            <a href="/events/upcoming/"
+               class='{% ifequal page_title "Upcoming events" %}active{% endifequal %}'>
+                <span>Upcoming events ({% upcoming_event_count %})</span>
             </a>
         </li>
         <li>
-            <a href="/projects/completed/"
-               class='{% ifequal page_title "Completed projects" %}active{% endifequal %}'>
-                <span>Completed projects ({% completed_project_count %})</span>
+            <a href="/events/past/"
+               class='{% ifequal page_title "Past events" %}active{% endifequal %}'>
+                <span>Past events ({% past_event_count %})</span>
             </a>
         </li>
     </ul>
 </div>
-{% endblock %}
 
-{% block subtabs %}
-{% if rss_url %}
-<a class="rssicon" href="{{ rss_url }}"><img src="/files/images/rss28.png" width="28" height="28"/></a>
-{% endif %}
-<a class="subtab {% ifequal list_type 'recommend' %}active{% endifequal %}" href="{{ list_mytags_url }}">My tags</a>
-<a class="subtab {% ifequal list_type 'new' %}active{% endifequal %}" href="{{ list_new_url }}">New</a>
-<a class="subtab {% ifequal list_type 'top' %}active{% endifequal %}" href="{{ list_top_url }}">Top</a>
 {% endblock %}
 
 {% block content %}
@@ -73,14 +66,20 @@ Developer. All Rights Reserved.
 		</ul>
 	</div>
 	{% endif %}
-<hr style="border-style: none none dotted; margin-bottom:0px;">
 
-	{% for project in project_list_page.object_list %}
-	
-		{% include "projects/project_snippet.html" %}
+	{% if rss_url %}
+	<div class="content_subsubtitle">
+		&nbsp;<a href="{{ rss_url }}"><img src="/files/images/rss28.png" style="vertical-align: middle;"/></a>&nbsp;&nbsp;&nbsp;Get as an <a href="{{ rss_url }}">RSS feed</a>.
+	</div>
+	{% endif %}
+    <hr style="border-style: none none dotted; margin-bottom:0px;">
+
+	{% for event in event_list_page.object_list %}
+
+		{% include "event_snippet.html" %}
 	
 	{% endfor %}
 	
-	{% with project_list_page as paginator_page %}{% include "projects/pagination_snippet.html" %}{% endwith %}
+	{% with event_list_page as paginator_page %}{% include "pagination_snippet.html" %}{% endwith %}
 
 {% endblock %}

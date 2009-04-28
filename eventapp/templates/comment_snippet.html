@@ -1,4 +1,5 @@
-"""
+{% comment %}
+
 "The contents of this file are subject to the Common Public Attribution
 License Version 1.0 (the "License"); you may not use this file except 
 in compliance with the License. You may obtain a copy of the License at 
@@ -19,37 +20,25 @@ The Initial Developer of the Original Code is "the Clusterify.com team",
 which is described at http://www.clusterify.com/about/. All portions of 
 the code written by the Initial Developer are Copyright (c) the Initial 
 Developer. All Rights Reserved.
-"""
 
-from django import template
-from projects.models import Project
-from django.contrib.auth.models import User
+{% endcomment %}
 
-register = template.Library()
+{% load util_filters %}
 
-def project_count():
-    return Project.objects.all().count()
+	<div class="project_comment">
+		<div class="project_comment_text">{% autoescape off %}{{ comment.text_html }}{% endautoescape %}</div>
 
-register.simple_tag(project_count)
+		<div class="user_icon_div" style="float: right;">
+			<img src="{{ comment.author.get_profile.get_gravatar_url }}" width="50" height="50"/>
+		</div>
 
-def proposed_project_count():
-    return Project.objects.filter(p_completed=False, wont_be_completed=False).count()
-
-register.simple_tag(proposed_project_count)
-
-def completed_project_count():
-    return Project.objects.filter(p_completed=True, wont_be_completed=False).count()
-
-register.simple_tag(completed_project_count)
-
-def people_count():
-    return User.objects.all().count()
-
-register.simple_tag(people_count)
-
-@register.simple_tag
-def active(request, pattern):
-    import re
-    if re.search(pattern, request.path):
-        return 'active'
-    return ''
+		<div class="user_info_div" style="float: right;">
+				by <a href="/accounts/profile/view/{{ comment.author }}">{{ comment.author }}</a> ({{ comment.author.get_profile.completed_projects_karma }})<br/>
+				{{ comment.pub_date|ago }}
+				{% ifequal comment.author user %}
+				<br/>
+				<a href="{{ comment.get_edit_url }}">edit comment</a>
+				{% endifequal %}
+		</div>
+	</div>
+	<br style="clear: both;"/>
