@@ -76,6 +76,8 @@ Developer. All Rights Reserved.
 
 <div class="content_subtitle">{{profile.user.username}}'s extended information</div>
 
+<p>Last Login: <b>{{ request.user.last_login|date:"M d, Y" }}</b></p>
+
 {% if profile.description_html %}
 	{% autoescape off %}{{ profile.description_html }}{% endautoescape %}
 {% else %}

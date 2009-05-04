@@ -96,6 +96,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_openidconsumer.middleware.OpenIDMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
 )
 
 ROOT_URLCONF = 'clusterify.urls'
@@ -124,6 +125,7 @@ INSTALLED_APPS = (
     'flag',
     'messages',
     'eventapp',
+    'tracking',
 )
 
 # for registration

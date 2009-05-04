@@ -1,4 +1,5 @@
 {% extends "basebase.html" %}
+{% load tracking_tags %}
 
 {% comment %}
 
@@ -92,6 +93,9 @@ Developer. All Rights Reserved.
     <a href="/projects/rss/comments">New Comments</a><br/>
     <hr/>
     <a href="/accounts/rss/new">New Users</a><br/>
+    <hr/>
+    {% visitors_on_site as visitors %}
+    {{ visitors }} active user{{ visitors|pluralize }}
 </div>
 
 </div>
