@@ -690,6 +690,14 @@ Developer. All Rights Reserved.
     margin-bottom: 15px;
 }
 
+.votable {
+    cursor: pointer;
+}
+
+.voted {
+    background: #00AC00 url('/files/images/check-mark.png') no-repeat;
+}
+
 .votes_count {
     font-size:large;
     font-weight:700;
